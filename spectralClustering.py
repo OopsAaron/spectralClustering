@@ -38,7 +38,7 @@ def getEigVec(L,cluster_num):  #从拉普拉斯矩阵获得特征矩阵，用的
     eigval,eigvec = np.linalg.eig(L)
     dim = len(eigval)
     dictEigval = dict(zip(eigval,range(0,dim)))
-    kEig = np.sort(eigval)[0:cluster_num]
+    kEig = np.sort(eigval)[0:cluster_num]   #得到前最小的k个特征值
     ix = [dictEigval[k] for k in kEig]
     return eigval[ix],eigvec[:,ix]
 def randRGB():
@@ -67,8 +67,9 @@ if __name__ == '__main__':
     W = getWbyKNN(data,KNN_k)
     D = getD(W)
     L = D-W #得到拉普拉斯矩阵
-    eigval,eigvec = getEigVec(L,cluster_num)
+    eigval,eigvec = getEigVec(L,cluster_num)#得到的特征向量为复数
     # print eigval,eigvec
+    eigvec=np.real(eigvec)#提取复数的实部
     clf = KMeans(n_clusters=cluster_num) #使用kmeans方法来对特征矩阵进行一个聚类，每个特征向量是特征矩阵的列，而每行当成一个聚类样本
     s = clf.fit(eigvec)
     C = s.labels_
